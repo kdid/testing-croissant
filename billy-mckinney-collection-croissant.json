@@ -1,0 +1,210 @@
+{
+    "@context": {
+        "@language": "en",
+        "@vocab": "https://schema.org/",
+        "citeAs": "cr:citeAs",
+        "column": "cr:column",
+        "conformsTo": "dct:conformsTo",
+        "cr": "http://mlcommons.org/croissant/",
+        "rai": "http://mlcommons.org/croissant/RAI/",
+        "data": {
+            "@id": "cr:data",
+            "@type": "@json"
+        },
+        "dataType": {
+            "@id": "cr:dataType",
+            "@type": "@vocab"
+        },
+        "dct": "http://purl.org/dc/terms/",
+        "examples": {
+            "@id": "cr:examples",
+            "@type": "@json"
+        },
+        "extract": "cr:extract",
+        "field": "cr:field",
+        "fileProperty": "cr:fileProperty",
+        "fileObject": "cr:fileObject",
+        "fileSet": "cr:fileSet",
+        "format": "cr:format",
+        "includes": "cr:includes",
+        "isLiveDataset": "cr:isLiveDataset",
+        "jsonPath": "cr:jsonPath",
+        "key": "cr:key",
+        "md5": "cr:md5",
+        "parentField": "cr:parentField",
+        "path": "cr:path",
+        "recordSet": "cr:recordSet",
+        "references": "cr:references",
+        "regex": "cr:regex",
+        "repeated": "cr:repeated",
+        "replace": "cr:replace",
+        "sc": "https://schema.org/",
+        "separator": "cr:separator",
+        "source": "cr:source",
+        "subField": "cr:subField",
+        "transform": "cr:transform"
+    },
+    "@type": "sc:Dataset",
+    "name": "Digital Collections Bill McKinney collection",
+    "conformsTo": "http://mlcommons.org/croissant/1.0",
+    "description": "This is a minimal example, using the Bill McKinney collection from the /nulib/nuldc-metadata dump csv",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "url": "https://dc.library.northwestern.edu/collections/819526ed-985c-4f8f-a5c8-631fc400c2f1/dataset",
+    "isLiveDataset": true,
+    "distribution": [
+        {
+            "@type": "cr:FileObject",
+            "@id": "dc-data.zip",
+            "contentUrl": "https://github.com/kdid/testing-croissant/raw/refs/heads/main/dc-data.zip",
+            "encodingFormat": "application/zip",
+            "sha256": "eed8c763d74e9f8436c3724c6b15f364cdd6765408bb6792bf0b80b23b0dc35c"
+        },
+        {
+            "@type": "cr:FileObject",
+            "@id": "billy-mckinney-collection",
+            "description": "csv file is inside the archive.",
+            "containedIn": {
+                "@id": "dc-data.zip"
+            },
+            "encodingFormat": "text/csv",
+            "contentUrl": "dc-data/billy-mckinney-collection.csv"
+        },
+        {
+            "@type": "cr:FileSet",
+            "@id": "image-files",
+            "containedIn": {
+                "@id": "dc-data.zip"
+            },
+            "encodingFormat": "image/jpeg",
+            "includes": "*.jpg"
+        }
+    ],
+    "recordSet": [
+        {
+            "@type": "cr:RecordSet",
+            "@id": "works",
+            "name": "works",
+            "key": {
+                "@id": "works/id"
+            },
+            "description": "A work in the collection.",
+            "field": [
+                {
+                    "@type": "cr:Field",
+                    "@id": "works/title",
+                    "name": "title",
+                    "description": "The first column contains the title.",
+                    "dataType": "sc:Text",
+                    "source": {
+                        "fileObject": {
+                            "@id": "billy-mckinney-collection"
+                        },
+                        "extract": {
+                            "column": "title"
+                        }
+                    }
+                },
+                {
+                    "@type": "cr:Field",
+                    "@id": "works/id",
+                    "name": "id",
+                    "description": "The second column contains the id.",
+                    "dataType": "sc:Text",
+                    "source": {
+                        "fileObject": {
+                            "@id": "billy-mckinney-collection"
+                        },
+                        "extract": {
+                            "column": "id"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "@type": "cr:RecordSet",
+            "@id": "images",
+            "name": "images",
+            "description": "Images in the collection.",
+            "field": [
+                {
+                    "@type": "cr:Field",
+                    "@id": "images/filename",
+                    "description": "The id of the work in Digital Collections.",
+                    "dataType": "sc:Text",
+                    "source": {
+                        "fileSet": {
+                            "@id": "image-files"
+                        },
+                        "extract": {
+                            "fileProperty": "filename"
+                        },
+                        "transform": {
+                            "regex": "([^\\/]*)\\.jpg"
+                        }
+                    }
+                },
+                {
+                    "@type": "cr:Field",
+                    "@id": "images/image_content",
+                    "description": "The content of the image.",
+                    "dataType": "sc:ImageObject",
+                    "source": {
+                        "fileSet": {
+                            "@id": "image-files"
+                        },
+                        "extract": {
+                            "fileProperty": "content"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "@type": "cr:RecordSet",
+            "@id": "works_with_images",
+            "name": "metadata and associated images",
+            "description": "Digital Collections.",
+            "field": [
+                {
+                    "@type": "cr:Field",
+                    "@id": "works_with_images/id",
+                    "name": "id",
+                    "dataType": "sc:Text",
+                    "references": {
+                        "field": {
+                            "@id": "works/id"
+                        }
+                    },
+                    "source": {
+                        "field": {
+                            "@id": "images/filename"
+                        }
+                    }
+                },
+                {
+                    "@type": "cr:Field",
+                    "@id": "works_with_images/image",
+                    "name": "image",
+                    "dataType": "sc:ImageObject",
+                    "source": {
+                        "field": {
+                            "@id": "images/image_content"
+                        }
+                    }
+                },
+                {
+                    "@type": "cr:Field",
+                    "@id": "works_with_images/title",
+                    "name": "annotation",
+                    "dataType": "sc:Text",
+                    "source": {
+                        "field": {
+                            "@id": "works/title"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
