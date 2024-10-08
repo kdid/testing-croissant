@@ -56,8 +56,7 @@
             "@type": "cr:FileObject",
             "@id": "dc-data.zip",
             "contentUrl": "https://github.com/kdid/testing-croissant/raw/refs/heads/main/dc-data.zip",
-            "encodingFormat": "application/zip",
-            "sha256": "eed8c763d74e9f8436c3724c6b15f364cdd6765408bb6792bf0b80b23b0dc35c"
+            "encodingFormat": "application/zip"
         },
         {
             "@type": "cr:FileObject",
